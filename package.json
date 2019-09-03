@@ -1,0 +1,31 @@
+{
+  "name": "zcalc",
+  "version": "1.0.0",
+  "description": "高级计算表达式求值",
+  "main": "lib/index.ts",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/ts-node tests/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zayfen/zcalc.git"
+  },
+  "keywords": [
+    "计算器",
+    "Calculator",
+    "Formula"
+  ],
+  "author": "zayfen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zayfen/zcalc/issues"
+  },
+  "homepage": "https://github.com/zayfen/zcalc#readme",
+  "devDependencies": {
+    "ts-node": "^8.3.0",
+    "typescript": "^3.6.2"
+  }
+}
