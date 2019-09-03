@@ -9,6 +9,8 @@ console.log(simplifyTokens(tokens))
 
 console.log(componenizeTokens(simplifyTokens(tokens)))
 
+console.log(calcFormula(expr))
+
 console.log("\n\n\n")
 
 const expr2 = '(1)'
