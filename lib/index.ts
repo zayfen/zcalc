@@ -1,6 +1,6 @@
-import { 
-  parse, 
-  simplifyTokens, 
+import {
+  parse,
+  simplifyTokens,
   componenizeTokens,
   normalizeTokens
 } from './parser'
@@ -13,7 +13,6 @@ import { tokenList2formula } from './utils'
 
 // reexport interface
 export default calcFormula
-
 
 
 

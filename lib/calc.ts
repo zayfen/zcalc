@@ -1,18 +1,30 @@
 import { Token, Component, TokenList, Number } from './token'
 
-import { 
-parse,
-simplifyTokens,
-normalizeTokens,
-componenizeTokens
+import {
+  parse,
+  simplifyTokens,
+  normalizeTokens,
+  componenizeTokens
 } from './parser'
 
+import {
+  makeMethodProcess
+} from './method_preprocess'
+import {
+  Sqrt
+} from './math_methods'
+
+const methodProcess = makeMethodProcess()
 
 /**
  * 计算表达式
  * @param formula 计算表达式(加减乘除基本表达式)
  */
-export function calcFormula (formula: string): number {
+export function calcFormula(formula: string): number {
+  // 先化高级函数
+  formula = methodProcess.process(formula)
+
+  // 再计算
   return calc(componenizeTokens(normalizeTokens(simplifyTokens(parse(formula)))))
 }
 
@@ -20,7 +32,7 @@ export function calcFormula (formula: string): number {
  * 
  * @param tokens 标准化的tokenList
  */
-export function calc (tokens: TokenList): number {
+export function calc(tokens: TokenList): number {
   let result: Number = calcTokenList(tokens)
 
   if (result instanceof Number) {
@@ -31,7 +43,7 @@ export function calc (tokens: TokenList): number {
 }
 
 
-function calcComponent (component: Component): Number {
+function calcComponent(component: Component): Number {
   let number = calcTokenList(component.value)
   if (number instanceof Number) {
     return number
@@ -40,36 +52,36 @@ function calcComponent (component: Component): Number {
   throw new Error("calcTokenList didnt return [Number]: " + number)
 }
 
-function calcTokenList (tokenList: TokenList): Number {
+function calcTokenList(tokenList: TokenList): Number {
   if (tokenList.length <= 0) {
     throw new Error('Empty Token List')
   }
 
   if (tokenList.length === 1) {
     let token = tokenList[0]
-    if  (token instanceof Component) {
+    if (token instanceof Component) {
       return calcComponent(token)
     }
     if (token instanceof Number) {
       return token
     }
-    
+
     throw new Error("Unknown Or Illegal Token In calcTokenList: " + token.tag)
   }
 
   for (let i = 0; i < tokenList.length; i++) {
     if (tokenList[i].tag === 'plus') {
-        calcPlus(tokenList, i)
-        break
+      calcPlus(tokenList, i)
+      break
     }
     if (tokenList[i].tag === 'minus') {
-        calcMinus(tokenList, i)
-        break
+      calcMinus(tokenList, i)
+      break
     }
 
     if (tokenList[i].tag === 'times') {
-        calcTimes(tokenList, i)
-        break
+      calcTimes(tokenList, i)
+      break
     }
 
     if (tokenList[i].tag === 'div') {
@@ -81,11 +93,11 @@ function calcTokenList (tokenList: TokenList): Number {
   return calcTokenList(tokenList)
 }
 
-function calcPlus (tokenList: TokenList, plusTokenIndex: number): Number {
+function calcPlus(tokenList: TokenList, plusTokenIndex: number): Number {
   let ret: Number
 
-  let leftToken = tokenList[plusTokenIndex-1]
-  let rightToken = tokenList[plusTokenIndex+1]
+  let leftToken = tokenList[plusTokenIndex - 1]
+  let rightToken = tokenList[plusTokenIndex + 1]
   if (leftToken instanceof Component) {
     leftToken = calcComponent(leftToken)
   }
@@ -94,18 +106,18 @@ function calcPlus (tokenList: TokenList, plusTokenIndex: number): Number {
   }
   if (leftToken instanceof Number && rightToken instanceof Number) {
     ret = new Number(leftToken.value + rightToken.value, -1)
-    tokenList.splice(plusTokenIndex-1, 3, ret)
+    tokenList.splice(plusTokenIndex - 1, 3, ret)
     return ret
   }
   throw new Error("leftToken and rightToken are not Number(leftToken: " + leftToken.tag + " rightToken:" + rightToken.tag + ")")
 }
 
 
-function calcMinus (tokenList: TokenList, plusTokenIndex: number): Number {
+function calcMinus(tokenList: TokenList, plusTokenIndex: number): Number {
   let ret: Number
 
-  let leftToken = tokenList[plusTokenIndex-1]
-  let rightToken = tokenList[plusTokenIndex+1]
+  let leftToken = tokenList[plusTokenIndex - 1]
+  let rightToken = tokenList[plusTokenIndex + 1]
   if (leftToken instanceof Component) {
     leftToken = calcComponent(leftToken)
   }
@@ -115,18 +127,18 @@ function calcMinus (tokenList: TokenList, plusTokenIndex: number): Number {
 
   if (leftToken instanceof Number && rightToken instanceof Number) {
     ret = new Number(leftToken.value - rightToken.value, -1)
-    tokenList.splice(plusTokenIndex-1, 3, ret)
+    tokenList.splice(plusTokenIndex - 1, 3, ret)
     return ret
   }
   throw new Error("leftToken and rightToken are not Number(leftToken: " + leftToken.tag + " rightToken:" + rightToken.tag + ")")
 }
 
 
-function calcTimes (tokenList: TokenList, plusTokenIndex: number): Number {
+function calcTimes(tokenList: TokenList, plusTokenIndex: number): Number {
   let ret: Number
 
-  let leftToken = tokenList[plusTokenIndex-1]
-  let rightToken = tokenList[plusTokenIndex+1]
+  let leftToken = tokenList[plusTokenIndex - 1]
+  let rightToken = tokenList[plusTokenIndex + 1]
   if (leftToken instanceof Component) {
     leftToken = calcComponent(leftToken)
   }
@@ -135,19 +147,19 @@ function calcTimes (tokenList: TokenList, plusTokenIndex: number): Number {
   }
   if (leftToken instanceof Number && rightToken instanceof Number) {
     ret = new Number(leftToken.value * rightToken.value, -1)
-    tokenList.splice(plusTokenIndex-1, 3, ret)
+    tokenList.splice(plusTokenIndex - 1, 3, ret)
     return ret
   }
-  
+
   throw new Error("leftToken and rightToken are not Number(leftToken: " + leftToken.tag + " rightToken:" + rightToken.tag + ")")
 }
 
 
-function calcDiv (tokenList: TokenList, plusTokenIndex: number): Number {
+function calcDiv(tokenList: TokenList, plusTokenIndex: number): Number {
   let ret: Number
 
-  let leftToken = tokenList[plusTokenIndex-1]
-  let rightToken = tokenList[plusTokenIndex+1]
+  let leftToken = tokenList[plusTokenIndex - 1]
+  let rightToken = tokenList[plusTokenIndex + 1]
   if (leftToken instanceof Component) {
     leftToken = calcComponent(leftToken)
   }
@@ -156,7 +168,7 @@ function calcDiv (tokenList: TokenList, plusTokenIndex: number): Number {
   }
   if (leftToken instanceof Number && rightToken instanceof Number) {
     ret = new Number(leftToken.value / rightToken.value, -1)
-    tokenList.splice(plusTokenIndex-1, 3, ret)
+    tokenList.splice(plusTokenIndex - 1, 3, ret)
     return ret
   }
   throw new Error("leftToken and rightToken are not Number(leftToken: " + leftToken.tag + " rightToken:" + rightToken.tag + ")")
