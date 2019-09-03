@@ -24,3 +24,15 @@ console.log(componenizeTokens(normalizeTokens(simplifyTokens(parse(expr2)))))
 console.log(calcFormula(expr2))
 
 ```
+
+### 高级函数支持 (支持自定义高级函数扩展)
+```typescript
+// 高级函数支持
+let process = new MethodPreprocess()
+process.registerMethod(new Sqrt())
+const advExpr = '3 + 2 * sqrt(sqrt(100 * 100 / 1)) + sqrt(100)'
+console.log(process.process(advExpr))
+console.log(calcFormula(advExpr))
+
+```
+
