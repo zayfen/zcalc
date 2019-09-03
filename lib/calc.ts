@@ -1,7 +1,7 @@
 import { Token, Component, TokenList, Number } from './token'
 
 import { 
-parse, 
+parse,
 simplifyTokens,
 normalizeTokens,
 componenizeTokens
