@@ -53,7 +53,7 @@ class Model extends BaseMethod {
       throw new Error(" Model arguments error, expect 2 but found " + record.args.length)
     }
     return calcFormula(record.args[0]) % calcFormula(record.args[1])
-  } 
+  }
 }
 
 // 注册 Model
