@@ -47,19 +47,19 @@ console.log(calcFormula(advExpr)) // output: 33
 
 const zcalc = new ZCalc()
 
-class Model extends BaseMethod {
-  name:string = 'model'
+class Mode extends BaseMethod {
+  name:string = 'Mode'
   protected calc(record: { args: string[]; start: number; length: number; }): number {
     if (record.args.length !== 2) {
-      throw new Error(" Model arguments error, expect 2 but found " + record.args.length)
+      throw new Error(" Mode arguments error, expect 2 but found " + record.args.length)
     }
     return calcFormula(record.args[0]) % calcFormula(record.args[1])
   }
 }
 
-// 注册 Model
-zcalc.addMathMethod(new Model)
+// 注册 Mode
+zcalc.addMathMethod(new Mode)
 
 // 定义含有自定义高级函数的表达式
-const customFormula: string = ' 1 + model( 100, model(200, 400) ) * 10' // expect：1001
+const customFormula: string = ' 1 + Mode( 100, Mode(200, 400) ) * 10' // expect：1001
 console.log(zcalc.calc(customFormula)) // output: 1001
