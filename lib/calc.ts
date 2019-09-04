@@ -8,23 +8,30 @@ import {
 } from './parser'
 
 import {
-  makeMethodProcess
+  makeMethodProcess, MethodPreprocess
 } from './method_preprocess'
 import {
-  Sqrt
+  Sqrt, BaseMethod
 } from './math_methods'
 
-const methodProcess = makeMethodProcess()
 
 /**
- * 计算表达式
+ * 计算高级表达式
  * @param formula 计算表达式(加减乘除基本表达式)
  */
-export function calcFormula(formula: string): number {
+export function calcFormula(formula: string, methodProcess: MethodPreprocess<BaseMethod> = makeMethodProcess()): number {
   // 先化高级函数
   formula = methodProcess.process(formula)
 
   // 再计算
+  return calc(componenizeTokens(normalizeTokens(simplifyTokens(parse(formula)))))
+}
+
+/**
+ * 计算基础表达式， 只有加减乘除 和 括号
+ * @param formula 
+ */
+export function calcSimpleFormula (formula: string): number {
   return calc(componenizeTokens(normalizeTokens(simplifyTokens(parse(formula)))))
 }
 
