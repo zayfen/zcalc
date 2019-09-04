@@ -11,25 +11,26 @@ console.log(calcSimpleFormula(simpleExpr)) // output: 11
 
 
 // 计算表达式解析 与 求值
-const expr = '(1.03 + 322 * 400 - (4 + 3.00 * 9.77 / (3.00 - 5)  ) * 788 - (.1 - .2))'
+const expr = '(1.03 + 322 * 400 - (4 + 3.00 * 9.77 / (3.00 - 5)  ) * 788 - (.1 - .2))' // expect: 137197.27
+
+console.log("result: " + calcFormula(expr)) // output: 137197.27
+
 
 let tokens = parse(expr)
+
 console.log(tokens)
 
-console.log(simplifyTokens(tokens))
-
-console.log(componenizeTokens(simplifyTokens(tokens)))
-
-console.log(calcFormula(expr))
+console.log(simplifyTokens(parse(expr)))
+console.log(tokenList2formula(normalizeTokens(simplifyTokens(parse(expr)))))
+console.log(componenizeTokens(simplifyTokens(parse(expr))))
 
 console.log("\n\n\n")
 
-const expr2 = '(1)'
+const expr2 = '(1)' // expect: 1
 console.log(normalizeTokens(simplifyTokens(parse(expr2))))
 console.log(tokenList2formula(normalizeTokens(simplifyTokens(parse(expr2)))))
 console.log(componenizeTokens(normalizeTokens(simplifyTokens(parse(expr2)))))
-
-console.log(calcFormula(expr2))
+console.log(calcFormula(expr2)) // output: 1
 
 
 console.log("\n\n\n")
@@ -37,9 +38,9 @@ console.log("\n\n\n")
 // 高级函数支持
 let process = new MethodPreprocess()
 process.registerMethod(new Sqrt())
-const advExpr = '3 + 2 * sqrt(sqrt(100 * 100 / 1)) + sqrt(100)'
+const advExpr = '3 + 2 * sqrt(sqrt(100 * 100 / 1)) + sqrt(100)' // expect:3 33
 console.log(process.process(advExpr))
-console.log(calcFormula(advExpr))
+console.log(calcFormula(advExpr)) // output: 33
 
 
 // 自定义高级函数支持

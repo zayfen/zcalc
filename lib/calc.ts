@@ -13,6 +13,7 @@ import {
 import {
   Sqrt, BaseMethod
 } from './math_methods'
+import { tokenList2formula } from './utils';
 
 
 /**
@@ -63,6 +64,9 @@ function calcTokenList(tokenList: TokenList): Number {
   if (tokenList.length <= 0) {
     throw new Error('Empty Token List')
   }
+
+  // 打印步骤(不要删除这行，非常重要，Debug利器)
+  // console.log(tokenList2formula(tokenList))
 
   if (tokenList.length === 1) {
     let token = tokenList[0]

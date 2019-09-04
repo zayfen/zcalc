@@ -42,7 +42,7 @@ export class MethodPreprocess<T extends BaseMethod> {
     let lastFormula: string = ''
 
     while (lastFormula !== currFormula) {
-      console.log("last: " + lastFormula + " ;current: " + currFormula)
+      // console.log("last: " + lastFormula + " ;current: " + currFormula)
       this.methods.forEach(method => {
         lastFormula = currFormula
         currFormula = method.pipe(currFormula)

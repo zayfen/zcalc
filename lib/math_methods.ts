@@ -63,7 +63,7 @@ export abstract class BaseMethod implements Method {
         if (counter !== 0) {
             throw new Error("formula is illegal: " + formula)
         }
-        console.log("leftParenIndex: " + leftParenIndex + " ;rightParenIndex: " + rightParenIndex)
+        // console.log("leftParenIndex: " + leftParenIndex + " ;rightParenIndex: " + rightParenIndex)
         let argsIndicator = leftParenIndex + 1
         argSepratorPos.forEach(pos => {
             let args = formula.slice(argsIndicator, pos)
