@@ -2,6 +2,7 @@
  * 一些高级计算函数
  */
 import { calcFormula } from './calc'
+import { Plus, Minus, Times, Div, LParen, RParen, Space } from './token'
 
 type MethodRecord = {
   args: Array<string>,
@@ -29,11 +30,12 @@ export abstract class BaseMethod implements Method {
 
     let preChar = formula[index - 1]
     let nextChar = formula[index + this.name.length]
-    if ([' ', '+', '-', '*', '/', '(', void 0].indexOf(preChar) > -1 && [' ', '('].indexOf(nextChar) > -1) { // valid
+    if ([Space.TAG_VALUE, Plus.TAG_VALUE, Minus.TAG_VALUE, Times.TAG_VALUE, Div.TAG_VALUE, LParen.TAG_VALUE, void 0].indexOf(preChar) > -1 &&
+      [Space.TAG_VALUE, LParen.TAG_VALUE].indexOf(nextChar) > -1) { // valid
       return index
     }
-    // skip this method
 
+    // skip this method
     startPos = this.skipMethod(formula, index)
     return this.findMethodIndex(formula, startPos)
   }
@@ -43,7 +45,7 @@ export abstract class BaseMethod implements Method {
     let len = formula.length
     let firstLParenIndex = -1
     while (++firstLParenIndex < len) {
-      if (formula[firstLParenIndex] === '(') {
+      if (formula[firstLParenIndex] === LParen.TAG_VALUE) {
         break;
       }
     }
@@ -51,10 +53,10 @@ export abstract class BaseMethod implements Method {
     let matchRParenIndex = firstLParenIndex
     let counter = 0
     while (matchRParenIndex < len) {
-      if (formula[matchRParenIndex] === '(') {
+      if (formula[matchRParenIndex] === LParen.TAG_VALUE) {
         counter++
       }
-      if (formula[++matchRParenIndex] === ')') {
+      if (formula[++matchRParenIndex] === RParen.TAG_VALUE) {
         counter--
         if (counter <= 0) {
           break
@@ -69,7 +71,6 @@ export abstract class BaseMethod implements Method {
     let record: MethodRecord = { args: [], start: -1, length: 0 }
     // let foundIndex = formula.indexOf(this.name)
     let foundIndex = this.findMethodIndex(formula, 0)
-    // console.log("::::parse: ", formula, " ;foundIndex: ", foundIndex)
     if (foundIndex === -1) {
       return record
     }
@@ -79,11 +80,11 @@ export abstract class BaseMethod implements Method {
     let leftParenIndex = foundIndex + this.name.length
     let rightParenIndex = leftParenIndex
 
-    while (formula[leftParenIndex] === ' ') {
+    while (formula[leftParenIndex] === Space.TAG_VALUE) {
       leftParenIndex++
     }
 
-    if (formula[leftParenIndex] !== '(') {
+    if (formula[leftParenIndex] !== LParen.TAG_VALUE) {
       throw new Error('method call error')
     }
 
@@ -92,10 +93,10 @@ export abstract class BaseMethod implements Method {
     rightParenIndex = leftParenIndex
     let argSepratorPos: Array<number> = []
     while (rightParenIndex < formula.length) {
-      if (formula[rightParenIndex] === '(') {
+      if (formula[rightParenIndex] === LParen.TAG_VALUE) {
         counter++
       }
-      if (formula[rightParenIndex] === ')') {
+      if (formula[rightParenIndex] === RParen.TAG_VALUE) {
         if (--counter === 0) {
           // find the rightParen
           argSepratorPos.push(rightParenIndex) // 参数分割记录
@@ -112,7 +113,7 @@ export abstract class BaseMethod implements Method {
     if (counter !== 0) {
       throw new Error("formula is illegal: " + formula)
     }
-    // console.log("leftParenIndex: " + leftParenIndex + " ;rightParenIndex: " + rightParenIndex)
+
     let argsIndicator = leftParenIndex + 1
     argSepratorPos.forEach(pos => {
       let args = formula.slice(argsIndicator, pos)

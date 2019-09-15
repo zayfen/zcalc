@@ -4,7 +4,7 @@ import { Clazz, tokenList2formula } from "./utils";
 export interface Token<T> {
   tag: string,
   value: T,
-  position: number  
+  position: number
 }
 
 export type TokenList = Array<Token<number | string> | Component>
@@ -15,12 +15,12 @@ export class Number implements Token<number> {
   position: number = -1
   static TAG: string = 'number'
 
-  constructor (value: number, pos: number) {
+  constructor(value: number, pos: number) {
     this.value = value
     this.position = pos
   }
 
-  toString (): string {
+  toString(): string {
     return '' + this.value
   }
 }
@@ -29,14 +29,15 @@ export class Plus implements Token<string> {
   tag: string = 'plus'
   value: string = '+'
   position: number = -1
-  
-  static TAG: string = 'plus'
 
-  constructor (pos: number) {
+  static TAG: string = 'plus'
+  static TAG_VALUE: string = '+'
+
+  constructor(pos: number) {
     this.position = pos
   }
 
-  toString (): string {
+  toString(): string {
     return this.value
   }
 }
@@ -47,12 +48,13 @@ export class Minus implements Token<string> {
   position: number = -1
 
   static TAG: string = 'minus'
+  static TAG_VALUE: string = '-'
 
-  constructor (pos: number) {
+  constructor(pos: number) {
     this.position = pos
   }
 
-  toString (): string {
+  toString(): string {
     return this.value
   }
 }
@@ -63,12 +65,13 @@ export class Times implements Token<string> {
   position: number = -1
 
   static TAG: string = 'times'
+  static TAG_VALUE: string = '*'
 
-  constructor (pos: number) {
+  constructor(pos: number) {
     this.position = pos
   }
 
-  toString (): string {
+  toString(): string {
     return this.value
   }
 }
@@ -79,12 +82,13 @@ export class Div implements Token<string> {
   position: number = -1
 
   static TAG: string = 'div'
+  static TAG_VALUE: string = '/'
 
-  constructor (pos: number) {
+  constructor(pos: number) {
     this.position = pos
   }
 
-  toString (): string {
+  toString(): string {
     return this.value
   }
 }
@@ -95,12 +99,13 @@ export class LParen implements Token<string> {
   position: number = -1
 
   static TAG: string = 'lparen'
+  static TAG_VALUE: string = '('
 
-  constructor (pos: number) {
+  constructor(pos: number) {
     this.position = pos
   }
 
-  toString (): string {
+  toString(): string {
     return this.value
   }
 }
@@ -111,12 +116,13 @@ export class RParen implements Token<string> {
   position: number = -1
 
   static TAG: string = 'rparen'
+  static TAG_VALUE: string = ')'
 
-  constructor (pos: number) {
+  constructor(pos: number) {
     this.position = pos
   }
 
-  toString (): string {
+  toString(): string {
     return this.value
   }
 }
@@ -127,12 +133,13 @@ export class Space implements Token<string> {
   position: number = -1
 
   static TAG: string = 'space'
+  static TAG_VALUE: string = ' '
 
-  constructor (pos: number) {
+  constructor(pos: number) {
     this.position = pos
   }
 
-  toString (): string {
+  toString(): string {
     return this.value
   }
 }
@@ -145,11 +152,11 @@ export class Component implements Token<TokenList> {
 
   static TAG: string = 'component'
 
-  constructor (tokens: TokenList) {
+  constructor(tokens: TokenList) {
     this.value = tokens
   }
 
-  toString (): string {
+  toString(): string {
     return '(' + tokenList2formula(this.value) + ')'
   }
 }
@@ -167,4 +174,4 @@ export class Nop implements Token<string> {
 
 
 
-export type TokensClazz =  Clazz<Number> | Clazz<Plus> | Clazz<Minus> | Clazz<Times> | Clazz<Div> | Clazz<LParen> | Clazz<RParen> | Clazz<Nop> | Clazz<Space>
+export type TokensClazz = Clazz<Number> | Clazz<Plus> | Clazz<Minus> | Clazz<Times> | Clazz<Div> | Clazz<LParen> | Clazz<RParen> | Clazz<Nop> | Clazz<Space>
