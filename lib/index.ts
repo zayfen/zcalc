@@ -1,31 +1,28 @@
-import {
-  parse,
-  simplifyTokens,
-  componenizeTokens,
-  normalizeTokens
-} from './parser'
 
 import {
-  calcFormula
+  calcFormula, calcSimpleFormula
 } from './calc'
 
-import { tokenList2formula } from './utils'
 
-// reexport interface
-export default calcFormula
+import {
+  makeMethodProcess, MethodPreprocess
+} from './method_preprocess'
+import { BaseMethod } from './math_methods';
 
+class ZCalc {
+  methodProcess: MethodPreprocess<BaseMethod> = makeMethodProcess()
 
+  public addMathMethod(method: BaseMethod) {
+    this.methodProcess.registerMethod(method)
+  }
 
-export {
-  parse,
-  simplifyTokens,
-  componenizeTokens,
-  normalizeTokens,
-  calcFormula,
-  tokenList2formula
+  public calc (formula: string): number {
+    return calcFormula(formula, this.methodProcess)
+  }
 }
 
-
+// 继承BaseMethod， 实现calc, 可以自定义高级函数
+export { ZCalc, BaseMethod, calcFormula, calcSimpleFormula }
 
 
 

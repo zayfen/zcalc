@@ -13,6 +13,7 @@ import {
   Component,
   TokensClazz
 } from './token'
+import { tokenList2formula } from './utils';
 
 
 
@@ -178,17 +179,23 @@ export function simplifyTokens (tokens: TokenList): TokenList {
 
 /**
  * 判断token 是否规范化了
- * (a * b) + (c * d + e * f)
+ * ([Component|Number] operator  [Component|Number]) 表示规范化了
  * @param tokens 
  * @param index 
  * 
  */
 function tokenNormalized (tokens: TokenList, index: number): boolean {
+  let preToken = tokens[index - 1]
+  let prepreToken = tokens[index - 2]
+
   let nextToken = tokens[index + 1]
   let nextnextToken = tokens[index + 2]
 
+  // 先判断右边
+  let lparenIndex = -1
+  let rparenIndex = -1
   if (nextToken instanceof Number && (nextnextToken && (nextnextToken instanceof RParen))) {
-    return true
+    rparenIndex = index - 2
   }
 
   if (nextToken.tag === LParen.TAG) {
@@ -201,15 +208,66 @@ function tokenNormalized (tokens: TokenList, index: number): boolean {
       }
       if (tokens[step].tag === RParen.TAG) {
         if (--counter === 0) {
-          // 找到对应的左括号
-          if (step < tokens.length && tokens[step - 1] instanceof RParen) {
-            return true
+          // 找到对应的右括号
+          if (step < tokens.length && tokens[step + 1] instanceof RParen) { // 右括号的右边需要是右括号
+            rparenIndex = step + 1
+            break
+          } else {
+            return false
           }
-          return false
+        }
+        if (counter < 0) {
+          throw new Error('表达式错误，右边括号不匹配：' + tokenList2formula(tokens) + ' @: ' + tokens[index])
         }
       }
       step++
     }
+  }
+
+  // 在判断左边
+  if (preToken instanceof Number && (prepreToken && (prepreToken instanceof LParen))) {
+    lparenIndex = index - 2
+  }
+  if (preToken.tag === RParen.TAG) { 
+    let step = index - 1
+    let counter = 0
+    while (step > -1) {
+      if (tokens[step].tag === RParen.TAG) {
+        counter++
+      }
+      if (tokens[step].tag === LParen.TAG) {
+        if (--counter === 0) {
+          // 找到对应的左括号
+          if (step > 0 && tokens[step - 1] instanceof LParen) { // 左括号的左边需要是左括号
+            lparenIndex = step - 1
+            break
+          } else {
+            return false
+          }
+        }
+
+        if (counter < 0) {
+          throw new Error('表达式错误，左边括号不匹配：' + tokenList2formula(tokens) + ' @: ' + tokens[index])
+        }
+      }
+      step--
+    }
+  }
+
+  if (lparenIndex !== -1 && rparenIndex !== -1) { // 分别找到对应的左右括号
+    // 判断这个括号是否是配对的
+    let counter = 0
+    let step = lparenIndex
+    while (step <= rparenIndex) {
+      if (tokens[step].tag === LParen.TAG) {
+        counter++
+      }
+      if (tokens[step].tag === RParen.TAG) {
+        counter--
+      }
+      step++
+    }
+    return counter === 0
   }
 
   return false

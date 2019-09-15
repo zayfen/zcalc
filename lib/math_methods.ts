@@ -67,8 +67,8 @@ export abstract class BaseMethod implements Method {
 
   protected parse(formula: string): MethodRecord {
     let record: MethodRecord = { args: [], start: -1, length: 0 }
-    let foundIndex = formula.indexOf(this.name)
-    // let foundIndex = this.findMethodIndex(formula, 0)
+    // let foundIndex = formula.indexOf(this.name)
+    let foundIndex = this.findMethodIndex(formula, 0)
     // console.log("::::parse: ", formula, " ;foundIndex: ", foundIndex)
     if (foundIndex === -1) {
       return record

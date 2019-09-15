@@ -2,7 +2,7 @@ import { TokenList } from './token'
 
 export function tokenList2formula (tokenList: TokenList): string {
   let formula: Array<string> = []
-  tokenList.forEach(token => formula.push(token.value as string))
+  tokenList.forEach(token => formula.push(token.toString()))
   return formula.join(' ')
 }
 

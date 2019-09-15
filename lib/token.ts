@@ -1,4 +1,4 @@
-import { Clazz } from "./utils";
+import { Clazz, tokenList2formula } from "./utils";
 
 
 export interface Token<T> {
@@ -19,34 +19,11 @@ export class Number implements Token<number> {
     this.value = value
     this.position = pos
   }
-}
 
-export class Sqrt implements Token<string> {
-  tag: string = 'sqrt'
-  value: string // this is formula
-  position: number = -1
-
-  static TAG: string = 'sqrt'
-
-  constructor (formula: string, pos: number) {
-    this.value = formula
-    this.position = pos
+  toString (): string {
+    return '' + this.value
   }
 }
-
-export class Power implements Token<string> {
-  tag: string = 'power'
-  value: string // this is formula
-  position: number = -1
-
-  static TAG: string = 'power'
-
-  constructor (formula: string, pos: number) {
-    this.value = formula
-    this.position = pos
-  }
-}
-
 
 export class Plus implements Token<string> {
   tag: string = 'plus'
@@ -57,6 +34,10 @@ export class Plus implements Token<string> {
 
   constructor (pos: number) {
     this.position = pos
+  }
+
+  toString (): string {
+    return this.value
   }
 }
 
@@ -70,6 +51,10 @@ export class Minus implements Token<string> {
   constructor (pos: number) {
     this.position = pos
   }
+
+  toString (): string {
+    return this.value
+  }
 }
 
 export class Times implements Token<string> {
@@ -81,6 +66,10 @@ export class Times implements Token<string> {
 
   constructor (pos: number) {
     this.position = pos
+  }
+
+  toString (): string {
+    return this.value
   }
 }
 
@@ -94,6 +83,10 @@ export class Div implements Token<string> {
   constructor (pos: number) {
     this.position = pos
   }
+
+  toString (): string {
+    return this.value
+  }
 }
 
 export class LParen implements Token<string> {
@@ -105,6 +98,10 @@ export class LParen implements Token<string> {
 
   constructor (pos: number) {
     this.position = pos
+  }
+
+  toString (): string {
+    return this.value
   }
 }
 
@@ -118,6 +115,10 @@ export class RParen implements Token<string> {
   constructor (pos: number) {
     this.position = pos
   }
+
+  toString (): string {
+    return this.value
+  }
 }
 
 export class Space implements Token<string> {
@@ -129,6 +130,10 @@ export class Space implements Token<string> {
 
   constructor (pos: number) {
     this.position = pos
+  }
+
+  toString (): string {
+    return this.value
   }
 }
 
@@ -142,6 +147,10 @@ export class Component implements Token<TokenList> {
 
   constructor (tokens: TokenList) {
     this.value = tokens
+  }
+
+  toString (): string {
+    return '(' + tokenList2formula(this.value) + ')'
   }
 }
 
