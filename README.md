@@ -1,3 +1,5 @@
+
+
 # zcalc
 表达式计算器
 
@@ -48,7 +50,7 @@ const zcalc = new ZCalc()
 
 // 自定义高级函数，需要继承BaseMethod, 并且制定 name 和 实现 calc方法
 class Mode extends BaseMethod {
-  name:string = 'mode'
+  name:string = 'Mode'
   protected calc(record: { args: string[]; start: number; length: number; }): number {
     if (record.args.length !== 2) {
       throw new Error(" Mode arguments error, expect 2 but found " + record.args.length)
@@ -57,12 +59,11 @@ class Mode extends BaseMethod {
   }
 }
 
-// 注册 Model
+// 注册 Mode
 zcalc.addMathMethod(new Mode)
 
 // 定义含有自定义高级函数的表达式
-const customFormula: string = ' 1 + mode( 100, mode(200, 400) ) * 10' // expect：1001
+const customFormula: string = ' 1 + Mode( 100, Mode(200, 400) ) * 10' // expect：1001
 console.log(zcalc.calc(customFormula)) // output: 1001
 
 ```
-
